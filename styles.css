@@ -1,0 +1,301 @@
+/* Monochrome, minimalist, system-font stack */
+:root {
+  --bg: #f5efe6;    /* warm beige */
+  --text: #000000;  /* true black */
+  --muted: #6b6b6b; /* neutral gray */
+  --line: #e2dacb;  /* soft divider on beige */
+  --font-sans: "Cormorant", ui-serif, Georgia, "Times New Roman", serif;
+  /* Dice sizing */
+  --dice-size: 26px; /* dice size */
+  --dice-border: 0px; /* avoid seams from borders */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #f5efe6;   /* keep beige in dark mode */
+    --text: #000000; /* keep black text */
+    --muted: #6b6b6b;
+    --line: #e2dacb;
+  }
+}
+
+html {
+  box-sizing: border-box;
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+*, *::before, *::after { box-sizing: inherit; }
+
+body {
+  margin: 0;
+  color: var(--text);
+  background: var(--bg);
+  font-family: var(--font-sans);
+  font-size: 18.5px;
+  line-height: 1.65;
+  font-weight: 500; /* slightly bolder body text */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+small { font-weight: 400; }
+
+a { color: inherit; }
+a:hover, a:focus { text-decoration: underline; }
+a { text-underline-offset: 2px; text-decoration-thickness: 1px; }
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.site-header {
+  border-bottom: 1px solid var(--line);
+}
+
+.site-header .container { position: relative; }
+
+.site-title {
+  font-size: 2.4rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 0 0 12px 0;
+}
+
+.site-nav {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.site-nav a {
+  color: var(--text);
+  text-decoration: none;
+  font-size: 1.3rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+/* Keep nav readable on smaller screens */
+@media (max-width: 480px) {
+  .site-nav a { font-size: 0.9rem; }
+  .site-title { font-size: 1.8rem; }
+}
+.site-nav a:hover,
+.site-nav a:focus {
+  text-decoration: underline;
+}
+
+.site-main { padding-top: 8px; }
+
+.section { padding: 32px 0; }
+.section + .section { border-top: 1px solid var(--line); }
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1.2;
+  margin: 0 0 16px 0;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--line);
+}
+
+p { margin: 0; }
+p + p { margin-top: 16px; }
+
+/* Tighter line spacing and larger paragraph gaps in About */
+#about p {
+  line-height: 1.4;
+  margin: 0 0 32px 0;
+}
+#about p:last-child { margin-bottom: 0; }
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.item-title { font-weight: 600; }
+.item-note { color: var(--muted); margin-left: 8px; }
+
+.site-footer {
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  padding-top: 20px;
+  padding-bottom: 40px;
+}
+
+.footer-links {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.footer-links span { color: var(--muted); }
+
+/* Dice cluster (top-right) */
+.dice-stack {
+  position: absolute;
+  top: 24px;
+  right: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px; /* more space above/below the dice */
+  z-index: 1;
+}
+
+.dice-group {
+  display: flex;
+  gap: 24px;
+}
+
+.dice-caption {
+  font-size: 0.95rem;
+  color: var(--muted);
+  line-height: 1;
+}
+
+.dice-button {
+  width: var(--dice-size);
+  height: var(--dice-size);
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  perspective: 500px;
+  perspective-origin: 50% 50%;
+}
+.dice-button:hover { opacity: 0.95; }
+.dice-button:active { transform: scale(0.98); }
+.dice-button:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+/* 3D dice styles */
+.cube-wrap {
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: rotateX(-35deg) rotateY(45deg);
+}
+
+.cube {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform-origin: 50% 50%;
+  will-change: transform;
+  /* geometry variables for face placement */
+  --half: calc(var(--dice-size) / 2);
+  --z: var(--half);
+  --face-scale: 1.023; /* slight overlap to better seal corners */
+  transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+  transition: transform 1100ms cubic-bezier(0.22, 0.8, 0.2, 1);
+  /* Add a matching background behind faces to mask micro-gaps */
+  background:
+    linear-gradient(135deg, #ead7b6 0%, #dec39d 100%),
+    repeating-linear-gradient(25deg, rgba(0,0,0,0.03) 0 2px, rgba(255,255,255,0.03) 2px 4px);
+}
+
+.cube::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -3px; /* ground shadow */
+  width: 60%;
+  height: 3px;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0.25), rgba(0,0,0,0) 70%);
+  border-radius: 50%;
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.pip {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #4b3b2f, #2b221c 70%);
+  align-self: center;
+  justify-self: center;
+  opacity: 0;
+}
+
+.pip.tl { grid-area: 1 / 1; }
+.pip.tr { grid-area: 1 / 3; }
+.pip.ml { grid-area: 2 / 1; }
+.pip.c  { grid-area: 2 / 2; }
+.pip.mr { grid-area: 2 / 3; }
+.pip.bl { grid-area: 3 / 1; }
+.pip.br { grid-area: 3 / 3; }
+
+/* Show pips per face (used on each cube face) */
+.face-1 .pip.c { opacity: 1; }
+.face-2 .pip.tl, .face-2 .pip.br { opacity: 1; }
+.face-3 .pip.tl, .face-3 .pip.c, .face-3 .pip.br { opacity: 1; }
+.face-4 .pip.tl, .face-4 .pip.tr, .face-4 .pip.bl, .face-4 .pip.br { opacity: 1; }
+.face-5 .pip.tl, .face-5 .pip.tr, .face-5 .pip.c, .face-5 .pip.bl, .face-5 .pip.br { opacity: 1; }
+.face-6 .pip.tl, .face-6 .pip.ml, .face-6 .pip.bl, .face-6 .pip.tr, .face-6 .pip.mr, .face-6 .pip.br { opacity: 1; }
+
+.cube.rolling { /* no transform animation; JS sets final transform with CSS transition */ }
+
+.cube.rolling::before { animation: shadow-3d 1100ms ease-out; }
+@keyframes shadow-3d {
+  0%   { transform: translateX(-50%) scale(1, 1); opacity: 0.25; }
+  35%  { transform: translateX(calc(-50% - 10px)) scale(0.85, 0.9); opacity: 0.18; }
+  70%  { transform: translateX(calc(-50% - 5px)) scale(0.9, 0.95); opacity: 0.2; }
+  100% { transform: translateX(-50%) scale(1, 1); opacity: 0.25; }
+}
+
+/* Cube faces */
+.cube .face {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  padding: 4px;
+  border-radius: 2px; /* tighter rounding to minimize corner wedges */
+  background:
+    linear-gradient(135deg, #ead7b6 0%, #dec39d 100%),
+    repeating-linear-gradient(25deg, rgba(0,0,0,0.03) 0 2px, rgba(255,255,255,0.03) 2px 4px);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Face placement around the cube */
+.cube .face-1 { transform: translateZ(var(--z)) scale(var(--face-scale)); }
+.cube .face-2 { transform: rotateY(90deg) translateZ(var(--z)) scale(var(--face-scale)); }
+.cube .face-3 { transform: rotateY(180deg) translateZ(var(--z)) scale(var(--face-scale)); }
+.cube .face-4 { transform: rotateY(-90deg) translateZ(var(--z)) scale(var(--face-scale)); }
+.cube .face-5 { transform: rotateX(90deg) translateZ(var(--z)) scale(var(--face-scale)); }
+.cube .face-6 { transform: rotateX(-90deg) translateZ(var(--z)) scale(var(--face-scale)); }
+
+
+
+@media (max-width: 480px) {
+  :root { --dice-size: 20px; }
+  .dice-stack { top: 24px; right: 28px; }
+  .dice-group { gap: 14px; }
+  .cube::before { height: 2px; }
+  .pip { width: 4px; height: 4px; }
+}
+
+/* Better tap targets on mobile */
+@media (hover: none) {
+  .site-nav a { padding: 6px 0; }
+}
