@@ -108,9 +108,9 @@
       function orientationForFaceTop(n){
         switch (n) {
           case 1: return { x: 90,  y: 0,   z: 0   };   // front -> top
-          case 2: return { x: 0,   y: 0,   z: 90  };   // right -> top
+          case 2: return { x: 0,   y: 0,   z: -90 };   // right -> top (CSS +y is down)
           case 3: return { x: -90, y: 0,   z: 0   };   // back -> top
-          case 4: return { x: 0,   y: 0,   z: -90 };   // left -> top
+          case 4: return { x: 0,   y: 0,   z: 90  };   // left -> top (CSS +y is down)
           case 5: return { x: 0,   y: 0,   z: 0   };   // top -> top
           case 6: return { x: 180, y: 0,   z: 0   };   // bottom -> top
           default: return { x: 0, y: 0, z: 0 };
